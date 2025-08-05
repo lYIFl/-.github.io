@@ -3,515 +3,1064 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>无限邮箱 - 临时邮箱服务</title>
+    <title>KEL交易网站</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         :root {
-            --primary-color: #4361ee;
-            --secondary-color: #3f37c9;
-            --accent-color: #4895ef;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --success-color: #4cc9f0;
-            --danger-color: #f72585;
-            --border-radius: 8px;
-            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --danger: #e63946;
+            --warning: #fca311;
+            --gray: #6c757d;
+            --light-blue: #e6f7ff;
+            --light-green: #f6ffed;
+            --light-orange: #fff7e6;
         }
+        
         body {
-            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-            max-width: 900px;
-            margin: 0 auto;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
             padding: 20px;
-            background-color: #f5f7fa;
-            color: var(--dark-color);
-            line-height: 1.6;
+            color: var(--dark);
         }
+        
         .container {
-            background-color: white;
-            border-radius: var(--border-radius);
-            padding: 30px;
-            box-shadow: var(--box-shadow);
-            margin-bottom: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-        h1 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: 600;
-            font-size: 2rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .email-form {
-            margin-bottom: 25px;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        input[type="text"] {
-            flex: 1;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            border-radius: var(--border-radius);
-            font-size: 16px;
-            transition: var(--transition);
-        }
-        input[type="text"]:focus {
-            border-color: var(--accent-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
-        }
-        button {
-            padding: 12px 24px;
-            background-color: var(--primary-color);
+        
+        /* 头部样式 */
+        header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
             color: white;
-            border: none;
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            font-size: 16px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 20px;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
             font-weight: 500;
-            transition: var(--transition);
+            padding: 8px 15px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+        
+        nav a:hover, nav a.active {
+            background: rgba(255, 255, 255, 0.2);
         }
-        button:active {
-            transform: translateY(0);
-        }
-        .email-info {
-            background-color: #f8f9fa;
-            border-radius: var(--border-radius);
-            padding: 15px;
-            margin-bottom: 20px;
+        
+        .cart {
+            position: relative;
+            cursor: pointer;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
             gap: 10px;
         }
-        .email-address {
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--primary-color);
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--warning);
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
             display: flex;
+            justify-content: center;
             align-items: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* 主内容区 */
+        main {
+            display: flex;
+            min-height: 600px;
+        }
+        
+        /* 前台销售页面 */
+        .store-front {
+            flex: 1;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #eee;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-image {
+            height: 180px;
+            background: linear-gradient(45deg, #e0eafc, #cfdef3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;
+            color: var(--primary);
+        }
+        
+        .product-info {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-info h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .product-info p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            flex: 1;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        
+        .product-price {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             gap: 8px;
         }
-        .copy-btn {
-            background-color: var(--light-color);
-            color: var(--primary-color);
-            border: 1px solid var(--primary-color);
-            padding: 6px 12px;
-            font-size: 14px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        .copy-btn:hover {
-            background-color: var(--primary-color);
+        
+        .btn-primary {
+            background: var(--primary);
             color: white;
         }
-        .refresh-info {
-            font-size: 13px;
-            color: #6c757d;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+        
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
         }
-        .refresh-icon {
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .email-list {
-            border: 1px solid #e9ecef;
-            border-radius: var(--border-radius);
-            max-height: 600px;
-            overflow-y: auto;
-            background-color: white;
-        }
-        .email-item {
-            padding: 16px 20px;
-            border-bottom: 1px solid #e9ecef;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-        }
-        .email-item:hover {
-            background-color: #f8f9fa;
-            transform: translateX(5px);
-        }
-        .email-item.unread {
-            background-color: #f0f7ff;
-            border-left: 3px solid var(--accent-color);
-        }
-        .email-item .subject {
-            font-size: 16px;
-            font-weight: 500;
-            margin-bottom: 25px;
-            color: var(--dark-color);
-            display: flex;
-            justify-content: space-between;
-        }
-        .email-item .meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: #6c757d;
-        }
-        .email-item .from {
+        
+        /* 后台管理页面 */
+        .admin-panel {
             flex: 1;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            margin-right: 15px;
-        }
-        .email-item .date {
-            white-space: nowrap;
-        }
-        .loading {
-            text-align: center;
             padding: 30px;
-            color: #6c757d;
+            display: none;
+        }
+        
+        .admin-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
         }
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary-color);
-            animation: spin 1s ease-in-out infinite;
+        
+        .admin-header h2 {
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .error-state {
+        
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            border: 1px solid #eee;
+        }
+        
+        .card h3 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background: #f8f9fa;
+            color: var(--gray);
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f8f9ff;
+        }
+        
+        .status {
+            padding: 5px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        /* 登录页面 */
+        .login-panel {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            display: none;
+        }
+        
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid #eee;
+        }
+        
+        .login-box h2 {
             text-align: center;
-            padding: 30px;
-            color: var(--danger-color);
+            margin-bottom: 30px;
+            color: var(--secondary);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 15px;
+            justify-content: center;
+            gap: 10px;
         }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        
+        /* 支付弹窗 */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .payment-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .payment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .payment-header h3 {
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+        
+        .close-btn:hover {
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+        
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .method {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            padding: 15px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .method:hover, .method.active {
+            border-color: var(--primary);
+            background: #f0f5ff;
+            transform: translateY(-3px);
+        }
+        
+        .method i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .total-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--primary);
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-success {
+            background: #38b000;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #2d8c00;
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: #c1121f;
+            transform: translateY(-2px);
+        }
+        
         /* 响应式设计 */
         @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
-            .email-form {
+            header {
                 flex-direction: column;
+                gap: 15px;
             }
-            button {
-                width: 100%;
+            
+            nav ul {
+                gap: 10px;
+                flex-wrap: wrap;
                 justify-content: center;
             }
-            .email-info {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .email-item .meta {
-                flex-direction: column;
-                gap: 5px;
-            }
-            .email-item .date {
-                align-self: flex-end;
-            }
-        }
-                .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--text-light);
-            font-size: 14px;
-        }
-        
-        .footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer a:hover {
-            color: var(--primary-hover);
-            text-decoration: underline;
-        }
-        
-        @media (max-width: 768px) {
-            .search-box {
-                flex-direction: column;
+            
+            .store-front {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             }
             
-            .user-header {
+            .admin-header {
                 flex-direction: column;
-                text-align: center;
-                padding: 25px 20px;
+                gap: 15px;
             }
             
-            .user-avatar {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-            
-            .user-details {
-                grid-template-columns: 1fr;
-                padding: 20px;
+            .payment-methods {
+                flex-direction: column;
             }
         }
-
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--success);
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification i {
+            color: var(--success);
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>无限邮箱</h1>
-        <div class="email-form">
-            <input type="text" id="emailPrefix" placeholder="输入您想要的邮箱前缀（如：mymail）" required>
-            <button id="generateBtn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
-                </svg>
-                生成邮箱
-            </button>
-        </div>
-        <div id="emailInfo" style="display: none;">
-            <div class="email-info">
-                <div class="email-address">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
-                    </svg>
-                    <span id="fullEmail"></span>
-                    <button class="copy-btn" id="copyBtn">复制</button>
+        <header>
+            <div class="logo">
+                <i class="fas fa-store"></i>
+                <h1>KEL交易系统</h1>
+            </div>
+            
+            <nav>
+                <ul>
+                    <li><a href="#" class="active" id="frontend-link"><i class="fas fa-home"></i> 商城首页</a></li>
+                    <li><a href="#" id="admin-link"><i class="fas fa-cog"></i> 后台管理</a></li>
+                </ul>
+            </nav>
+            
+            <div class="cart" id="cart-icon">
+                <i class="fas fa-shopping-cart fa-lg"></i>
+                <span class="cart-count">0</span>
+                <span>购物车</span>
+            </div>
+        </header>
+        
+        <main>
+            <!-- 前台销售页面 -->
+            <section class="store-front" id="store-front">
+                <!-- 商品将通过JS动态生成 -->
+            </section>
+            
+            <!-- 后台管理页面 -->
+            <section class="admin-panel" id="admin-panel">
+                <div class="admin-header">
+                    <h2><i class="fas fa-tachometer-alt"></i> 管理控制台</h2>
+                    <button class="btn btn-danger" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> 退出登录
+                    </button>
                 </div>
-                <div class="refresh-info">
-                    <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                    </svg>
-                    <span>自动刷新中... 最后更新: <span id="lastRefresh"></span></span>
+                
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> 销售概览</h3>
+                    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                        <div style="background: var(--light-blue); padding: 20px; border-radius: 10px; flex: 1; min-width: 200px;">
+                            <h4>总销售额</h4>
+                            <p style="font-size: 2rem; color: var(--primary); margin-top: 10px;">¥8,560</p>
+                        </div>
+                        <div style="background: var(--light-green); padding: 20px; border-radius: 10px; flex: 1; min-width: 200px;">
+                            <h4>总订单数</h4>
+                            <p style="font-size: 2rem; color: #52c41a; margin-top: 10px;">42</p>
+                        </div>
+                        <div style="background: var(--light-orange); padding: 20px; border-radius: 10px; flex: 1; min-width: 200px;">
+                            <h4>商品总数</h4>
+                            <p style="font-size: 2rem; color: #fa8c16; margin-top: 10px;">12</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-shopping-bag"></i> 最近订单</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>订单号</th>
+                                <th>客户</th>
+                                <th>金额</th>
+                                <th>状态</th>
+                                <th>日期</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#ORD-2023-001</td>
+                                <td>张先生</td>
+                                <td>¥560</td>
+                                <td><span class="status status-completed">已完成</span></td>
+                                <td>2023-07-15</td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2023-002</td>
+                                <td>李女士</td>
+                                <td>¥1,240</td>
+                                <td><span class="status status-completed">已完成</span></td>
+                                <td>2023-07-14</td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2023-003</td>
+                                <td>王先生</td>
+                                <td>¥320</td>
+                                <td><span class="status status-pending">处理中</span></td>
+                                <td>2023-07-13</td>
+                            </tr>
+                            <tr>
+                                <td>#ORD-2023-004</td>
+                                <td>刘小姐</td>
+                                <td>¥780</td>
+                                <td><span class="status status-completed">已完成</span></td>
+                                <td>2023-07-12</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="card">
+                    <h3><i class="fas fa-box"></i> 商品管理</h3>
+                    <button class="btn btn-primary" style="margin-bottom: 20px;" id="add-product-btn">
+                        <i class="fas fa-plus"></i> 添加商品
+                    </button>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>商品名称</th>
+                                <th>价格</th>
+                                <th>库存</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-products">
+                            <!-- 商品将通过JS动态生成 -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            
+            <!-- 登录页面 -->
+            <section class="login-panel" id="login-panel">
+                <div class="login-box">
+                    <h2><i class="fas fa-lock"></i> 后台登录</h2>
+                    <div class="form-group">
+                        <label for="username">用户名</label>
+                        <input type="text" id="username" class="form-control" placeholder="输入管理员用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">密码</label>
+                        <input type="password" id="password" class="form-control" placeholder="输入管理员密码">
+                    </div>
+                    <button class="btn btn-primary btn-block" id="login-btn">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </button>
+                    <div style="margin-top: 20px; text-align: center; color: var(--gray);">
+                        <p></p>
+                        <p></p>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 - 版权归KEL所有</p>
+        </footer>
+    </div>
+    
+    <!-- 支付弹窗 -->
+    <div class="payment-modal" id="payment-modal">
+        <div class="payment-box animate">
+            <div class="payment-header">
+                <h3><i class="fas fa-credit-card"></i> 支付订单</h3>
+                <button class="close-btn" id="close-payment">&times;</button>
+            </div>
+            
+            <div class="payment-methods">
+                <div class="method active" data-method="alipay">
+                    <i class="fab fa-alipay"></i>
+                    <div>支付宝</div>
+                </div>
+                <div class="method" data-method="wechat">
+                    <i class="fab fa-weixin"></i>
+                    <div>微信支付</div>
+                </div>
+                <div class="method" data-method="card">
+                    <i class="fas fa-credit-card"></i>
+                    <div>银行卡</div>
                 </div>
             </div>
             
-            <div class="email-list" id="emailList">
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <div>正在加载邮件列表...</div>
-                </div>
+            <div class="total-price">
+                总计: ¥<span id="total-amount">0</span>
             </div>
+            
+            <button class="btn btn-success btn-block" id="confirm-payment">
+                <i class="fas fa-check-circle"></i> 确认支付
+            </button>
+            <button class="btn btn-danger btn-block" style="margin-top: 10px;" id="cancel-payment">
+                <i class="fas fa-times-circle"></i> 取消支付
+            </button>
         </div>
     </div>
-            <div class="footer">
-            <a href="https://zjb522.cn" target="_blank">© 鸡脖工作室版权所有</a>
-        </div>
+    
+    <!-- 通知 -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notification-text">操作成功！</span>
     </div>
-
-
+    
     <script>
-        let currentEmail = '';
-        let refreshInterval;
-        let lastRefreshTime = 0;
-        let previousEmails = []; // 用于存储上一次的邮件列表
-        let emailListChanged = false; // 标记邮件列表是否有变化
-
-        // 生成邮箱地址
-        document.getElementById('generateBtn').addEventListener('click', function() {
-            const prefix = document.getElementById('emailPrefix').value.trim();
-            if (!prefix) {
-                alert('请输入邮箱前缀');
+        // 商品数据
+        const products = [
+            { id: 1, name: "无线蓝牙耳机", price: 299, description: "高音质无线蓝牙耳机，续航长达24小时", icon: "fas fa-headphones", stock: 42 },
+            { id: 2, name: "智能手机", price: 2899, description: "最新款智能手机，6.7英寸全面屏", icon: "fas fa-mobile-alt", stock: 15 },
+            { id: 3, name: "智能手表", price: 1299, description: "健康监测，消息提醒，超长续航", icon: "fas fa-clock", stock: 28 },
+            { id: 4, name: "平板电脑", price: 1999, description: "高性能平板电脑，10.5英寸视网膜屏", icon: "fas fa-tablet-alt", stock: 20 },
+            { id: 5, name: "笔记本电脑", price: 5999, description: "轻薄便携，强劲性能，办公娱乐两不误", icon: "fas fa-laptop", stock: 10 },
+            { id: 6, name: "数码相机", price: 3999, description: "专业级数码相机，高清4K视频拍摄", icon: "fas fa-camera", stock: 8 }
+        ];
+        
+        // 全局变量
+        let cart = [];
+        let currentPanel = "frontend";
+        
+        // DOM元素
+        const storeFront = document.getElementById('store-front');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginPanel = document.getElementById('login-panel');
+        const frontendLink = document.getElementById('frontend-link');
+        const adminLink = document.getElementById('admin-link');
+        const cartIcon = document.getElementById('cart-icon');
+        const cartCount = document.querySelector('.cart-count');
+        const paymentModal = document.getElementById('payment-modal');
+        const totalAmount = document.getElementById('total-amount');
+        const confirmPayment = document.getElementById('confirm-payment');
+        const cancelPayment = document.getElementById('cancel-payment');
+        const closePayment = document.getElementById('close-payment');
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const addProductBtn = document.getElementById('add-product-btn');
+        const adminProducts = document.getElementById('admin-products');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        
+        // 初始化页面
+        function initPage() {
+            renderProducts();
+            renderAdminProducts();
+            setupEventListeners();
+            
+            // 检查登录状态
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                switchPanel('admin');
+                updateNavLinks('admin');
+            } else {
+                switchPanel('frontend');
+            }
+        }
+        
+        // 渲染商品列表（前台）
+        function renderProducts() {
+            storeFront.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card animate';
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <i class="${product.icon}"></i>
+                    </div>
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <div class="product-price">¥${product.price}</div>
+                        <button class="btn btn-primary" data-id="${product.id}">
+                            <i class="fas fa-cart-plus"></i> 加入购物车
+                        </button>
+                    </div>
+                `;
+                
+                storeFront.appendChild(productCard);
+            });
+            
+            // 添加购物车按钮事件
+            document.querySelectorAll('.product-card .btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.closest('.btn').dataset.id);
+                    addToCart(productId);
+                });
+            });
+        }
+        
+        // 渲染商品列表（后台）
+        function renderAdminProducts() {
+            adminProducts.innerHTML = '';
+            
+            products.forEach(product => {
+                const tr = document.createElement('tr');
+                tr.className = 'animate';
+                tr.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>¥${product.price}</td>
+                    <td>${product.stock}</td>
+                    <td>
+                        <button class="btn edit-btn" data-id="${product.id}" style="padding: 5px 10px; background: #e6f7ff;">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn delete-btn" data-id="${product.id}" style="padding: 5px 10px; background: #fff1f0;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                adminProducts.appendChild(tr);
+            });
+            
+            // 添加编辑按钮事件
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.closest('.btn').dataset.id);
+                    editProduct(productId);
+                });
+            });
+            
+            // 添加删除按钮事件
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const productId = parseInt(e.target.closest('.btn').dataset.id);
+                    deleteProduct(productId);
+                });
+            });
+        }
+        
+        // 添加商品到购物车
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            const existingItem = cart.find(item => item.id === productId);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    quantity: 1
+                });
+            }
+            
+            updateCartCount();
+            showNotification(`已将 ${product.name} 添加到购物车！`);
+        }
+        
+        // 更新购物车数量
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            cartCount.textContent = count;
+        }
+        
+        // 计算购物车总金额
+        function calculateTotal() {
+            return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+        }
+        
+        // 切换面板
+        function switchPanel(panelName) {
+            storeFront.style.display = 'none';
+            adminPanel.style.display = 'none';
+            loginPanel.style.display = 'none';
+            
+            currentPanel = panelName;
+            
+            if (panelName === 'frontend') {
+                storeFront.style.display = 'grid';
+            } else if (panelName === 'admin') {
+                adminPanel.style.display = 'block';
+            } else if (panelName === 'login') {
+                loginPanel.style.display = 'flex';
+            }
+        }
+        
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 导航链接
+            frontendLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchPanel('frontend');
+                updateNavLinks('frontend');
+            });
+            
+            adminLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (localStorage.getItem('isLoggedIn') === 'true') {
+                    switchPanel('admin');
+                    updateNavLinks('admin');
+                } else {
+                    switchPanel('login');
+                    updateNavLinks('admin');
+                }
+            });
+            
+            // 购物车图标
+            cartIcon.addEventListener('click', () => {
+                if (cart.length === 0) {
+                    showNotification('您的购物车是空的！');
+                    return;
+                }
+                
+                totalAmount.textContent = calculateTotal();
+                paymentModal.style.display = 'flex';
+            });
+            
+            // 支付弹窗按钮
+            confirmPayment.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+                showNotification('支付成功！感谢您的购买。');
+                cart = [];
+                updateCartCount();
+            });
+            
+            cancelPayment.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+            
+            closePayment.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+            
+            // 支付方式选择
+            document.querySelectorAll('.method').forEach(method => {
+                method.addEventListener('click', () => {
+                    document.querySelectorAll('.method').forEach(m => {
+                        m.classList.remove('active');
+                    });
+                    method.classList.add('active');
+                });
+            });
+            
+            // 登录按钮
+            loginBtn.addEventListener('click', () => {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                if (username === 'admin' && password === 'admin123') {
+                    localStorage.setItem('isLoggedIn', 'true');
+                    switchPanel('admin');
+                    updateNavLinks('admin');
+                    showNotification('登录成功！欢迎回来，管理员。');
+                } else {
+                    showNotification('用户名或密码错误！');
+                }
+            });
+            
+            // 退出按钮
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('isLoggedIn');
+                switchPanel('frontend');
+                updateNavLinks('frontend');
+                showNotification('您已成功退出登录！');
+            });
+            
+            // 添加商品按钮
+            addProductBtn.addEventListener('click', () => {
+                const newProduct = {
+                    id: Date.now(),
+                    name: `新产品 ${products.length + 1}`,
+                    price: 999,
+                    description: "新产品描述",
+                    icon: "fas fa-box",
+                    stock: 10
+                };
+                
+                products.push(newProduct);
+                renderProducts();
+                renderAdminProducts();
+                showNotification('新产品已添加！');
+            });
+        }
+        
+        // 更新导航链接状态
+        function updateNavLinks(active) {
+            document.querySelectorAll('nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (active === 'frontend') {
+                frontendLink.classList.add('active');
+            } else if (active === 'admin') {
+                adminLink.classList.add('active');
+            }
+        }
+        
+        // 编辑商品
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            const newName = prompt('请输入新商品名称', product.name);
+            if (newName === null) return;
+            
+            const newPrice = parseFloat(prompt('请输入新价格', product.price));
+            if (isNaN(newPrice)) {
+                showNotification('价格必须是数字！');
                 return;
             }
             
-            currentEmail = `${prefix}@uuf.me`;
-            document.getElementById('fullEmail').textContent = currentEmail;
-            document.getElementById('emailInfo').style.display = 'block';
+            product.name = newName;
+            product.price = newPrice;
             
-            // 开始自动刷新
-            if (refreshInterval) {
-                clearInterval(refreshInterval);
-            }
-            previousEmails = []; // 重置之前的邮件列表
-            loadEmails();
-            refreshInterval = setInterval(loadEmails, 5000); // 5秒刷新一次
-        });
+            renderProducts();
+            renderAdminProducts();
+            showNotification('商品信息已更新！');
+        }
         
-        // 复制邮箱地址
-        document.getElementById('copyBtn').addEventListener('click', function() {
-            navigator.clipboard.writeText(currentEmail).then(() => {
-                const originalText = this.textContent;
-                this.textContent = '已复制!';
-                this.style.backgroundColor = '#28a745';
-                this.style.color = 'white';
-                this.style.borderColor = '#28a745';
-                
-                setTimeout(() => {
-                    this.textContent = originalText;
-                    this.style.backgroundColor = '';
-                    this.style.color = '';
-                    this.style.borderColor = '';
-                }, 2000);
-            }).catch(err => {
-                console.error('复制失败:', err);
-                alert('复制失败，请手动复制');
-            });
-        });
-        
-        // 加载邮件列表
-        async function loadEmails() {
-            if (!currentEmail) return;
+        // 删除商品
+        function deleteProduct(id) {
+            if (!confirm('确定要删除这个商品吗？')) return;
             
-            try {
-                const response = await fetch(`https://zjb522.sbs/v3/email.php?mail=${currentEmail}`);
-                if (!response.ok) {
-                    throw new Error('网络响应不正常');
-                }
-                const emails = await response.json();
-                
-                lastRefreshTime = Date.now();
-                document.getElementById('lastRefresh').textContent = new Date(lastRefreshTime).toLocaleTimeString();
-                
-                // 比较当前邮件列表和上一次的邮件列表
-                emailListChanged = false;
-                if (emails.length !== previousEmails.length) {
-                    emailListChanged = true;
-                } else {
-                    // 检查每封邮件是否相同
-                    for (let i = 0; i < emails.length; i++) {
-                        if (emails[i].id !== previousEmails[i]?.id) {
-                            emailListChanged = true;
-                            break;
-                        }
-                    }
-                }
-                
-                // 只有当邮件列表有变化时才更新UI
-                if (emailListChanged) {
-                    const emailList = document.getElementById('emailList');
-                    emailList.innerHTML = ''; // 清空当前列表
-                    
-                    emails.forEach(email => {
-                        const emailItem = document.createElement('div');
-                        emailItem.className = `email-item ${email.seen ? '' : 'unread'}`;
-                        emailItem.innerHTML = `
-                            <div class="subject">
-                                <span>${escapeHtml(email.subject) || '(无主题)'}</span>
-                                <span class="badge">${formatFileSize(email.size)}</span>
-                            </div>
-                            <div class="meta">
-                                <span class="from" title="${escapeHtml(email.from)}">${escapeHtml(email.from)}</span>
-                                <span class="date">${formatDate(email.date)}</span>
-                            </div>
-                        `;
-                        
-                        emailItem.addEventListener('click', () => {
-                            // 跳转到详情页面
-                            window.location.href = `detail.html?email=${encodeURIComponent(currentEmail)}&id=${encodeURIComponent(email.id)}`;
-                        });
-                        
-                        emailList.appendChild(emailItem);
-                    });
-                    
-                    previousEmails = emails; // 更新上一次的邮件列表
-                    
-                    // 如果有新邮件，显示通知
-                    if (emails.length > 0 && previousEmails.length > 0 && 
-                        emails[0].id !== previousEmails[0]?.id) {
-                        showNewEmailNotification(emails[0]);
-                    }
-                }
-            } catch (error) {
-                console.error('加载邮件列表失败:', error);
-                document.getElementById('emailList').innerHTML = `
-                    <div class="error-state">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                        </svg>
-                        <p>加载失败: ${escapeHtml(error.message)}</p>
-                        <button onclick="loadEmails()" style="margin-top: 10px;">重试</button>
-                    </div>
-                `;
+            const index = products.findIndex(p => p.id === id);
+            if (index !== -1) {
+                const productName = products[index].name;
+                products.splice(index, 1);
+                renderProducts();
+                renderAdminProducts();
+                showNotification(`已删除商品: ${productName}`);
             }
         }
-
-        // 显示新邮件通知
-        function showNewEmailNotification(email) {
-            const notification = document.createElement('div');
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.backgroundColor = 'white';
-            notification.style.padding = '15px';
-            notification.style.borderRadius = '8px';
-            notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
-            notification.style.zIndex = '1000';
-            notification.style.cursor = 'pointer';
-            notification.style.maxWidth = '300px';
-            notification.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 5px;">新邮件到达</div>
-                <div style="font-size: 14px;">来自: ${escapeHtml(email.from)}</div>
-                <div style="font-size: 14px;">主题: ${escapeHtml(email.subject) || '(无主题)'}</div>
-            `;
+        
+        // 显示通知
+        function showNotification(message) {
+            notificationText.textContent = message;
+            notification.classList.add('show');
             
-            notification.addEventListener('click', () => {
-                document.body.removeChild(notification);
-                // 滚动到邮件列表顶部
-                document.getElementById('emailList').scrollTo(0, 0);
-            });
-            
-            document.body.appendChild(notification);
-            
-            // 5秒后自动消失
             setTimeout(() => {
-                if (document.body.contains(notification)) {
-                    document.body.removeChild(notification);
-                }
-            }, 5000);
+                notification.classList.remove('show');
+            }, 3000);
         }
-
-        // 格式化日期
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-
-            const now = new Date();
-            const diffInHours = (now - date) / (1000 * 60 * 60);
-
-            if (diffInHours < 24) {
-                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            } else if (diffInHours < 48) {
-                return '昨天';
-            } else if (diffInHours < 168) {
-                return date.toLocaleDateString([], { weekday: 'short' });
-            } else {
-                return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-            }
-        }
-
-        // 格式化文件大小
-        function formatFileSize(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-        }
-
-        // HTML转义
-        function escapeHtml(unsafe) {
-            if (!unsafe) return '';
-            return unsafe.toString()
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', initPage);
     </script>
 </body>
 </html>
