@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>无限邮箱 - 临时邮箱服务</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        body {
+            font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        .container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .email-form {
+            margin-bottom: 25px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+        button {
+            padding: 12px 24px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .email-info {
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .email-address {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .copy-btn {
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+            padding: 6px 12px;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .copy-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .refresh-info {
+            font-size: 13px;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .refresh-icon {
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .email-list {
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            max-height: 600px;
+            overflow-y: auto;
+            background-color: white;
+        }
+        .email-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e9ecef;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+        }
+        .email-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(5px);
+        }
+        .email-item.unread {
+            background-color: #f0f7ff;
+            border-left: 3px solid var(--accent-color);
+        }
+        .email-item .subject {
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: var(--dark-color);
+            display: flex;
+            justify-content: space-between;
+        }
+        .email-item .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .email-item .from {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-right: 15px;
+        }
+        .email-item .date {
+            white-space: nowrap;
+        }
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #6c757d;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+        .error-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--danger-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .email-form {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+                justify-content: center;
+            }
+            .email-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .email-item .meta {
+                flex-direction: column;
+                gap: 5px;
+            }
+            .email-item .date {
+                align-self: flex-end;
+            }
+        }
+                .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer a:hover {
+            color: var(--primary-hover);
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .user-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 25px 20px;
+            }
+            
+            .user-avatar {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            
+            .user-details {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>无限邮箱</h1>
+        <div class="email-form">
+            <input type="text" id="emailPrefix" placeholder="输入您想要的邮箱前缀（如：mymail）" required>
+            <button id="generateBtn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                </svg>
+                生成邮箱
+            </button>
+        </div>
+        <div id="emailInfo" style="display: none;">
+            <div class="email-info">
+                <div class="email-address">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555ZM0 4.697v7.104l5.803-3.558L0 4.697ZM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757Zm3.436-.586L16 11.801V4.697l-5.803 3.546Z"/>
+                    </svg>
+                    <span id="fullEmail"></span>
+                    <button class="copy-btn" id="copyBtn">复制</button>
+                </div>
+                <div class="refresh-info">
+                    <svg class="refresh-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                    </svg>
+                    <span>自动刷新中... 最后更新: <span id="lastRefresh"></span></span>
+                </div>
+            </div>
+            
+            <div class="email-list" id="emailList">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>正在加载邮件列表...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+            <div class="footer">
+            <a href="https://zjb522.cn" target="_blank">© 鸡脖工作室版权所有</a>
+        </div>
+    </div>
+
+
+    <script>
+        let currentEmail = '';
+        let refreshInterval;
+        let lastRefreshTime = 0;
+        let previousEmails = []; // 用于存储上一次的邮件列表
+        let emailListChanged = false; // 标记邮件列表是否有变化
+
+        // 生成邮箱地址
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const prefix = document.getElementById('emailPrefix').value.trim();
+            if (!prefix) {
+                alert('请输入邮箱前缀');
+                return;
+            }
+            
+            currentEmail = `${prefix}@uuf.me`;
+            document.getElementById('fullEmail').textContent = currentEmail;
+            document.getElementById('emailInfo').style.display = 'block';
+            
+            // 开始自动刷新
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+            previousEmails = []; // 重置之前的邮件列表
+            loadEmails();
+            refreshInterval = setInterval(loadEmails, 5000); // 5秒刷新一次
+        });
+        
+        // 复制邮箱地址
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            navigator.clipboard.writeText(currentEmail).then(() => {
+                const originalText = this.textContent;
+                this.textContent = '已复制!';
+                this.style.backgroundColor = '#28a745';
+                this.style.color = 'white';
+                this.style.borderColor = '#28a745';
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.backgroundColor = '';
+                    this.style.color = '';
+                    this.style.borderColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
+        });
+        
+        // 加载邮件列表
+        async function loadEmails() {
+            if (!currentEmail) return;
+            
+            try {
+                const response = await fetch(`https://zjb522.sbs/v3/email.php?mail=${currentEmail}`);
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
+                const emails = await response.json();
+                
+                lastRefreshTime = Date.now();
+                document.getElementById('lastRefresh').textContent = new Date(lastRefreshTime).toLocaleTimeString();
+                
+                // 比较当前邮件列表和上一次的邮件列表
+                emailListChanged = false;
+                if (emails.length !== previousEmails.length) {
+                    emailListChanged = true;
+                } else {
+                    // 检查每封邮件是否相同
+                    for (let i = 0; i < emails.length; i++) {
+                        if (emails[i].id !== previousEmails[i]?.id) {
+                            emailListChanged = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // 只有当邮件列表有变化时才更新UI
+                if (emailListChanged) {
+                    const emailList = document.getElementById('emailList');
+                    emailList.innerHTML = ''; // 清空当前列表
+                    
+                    emails.forEach(email => {
+                        const emailItem = document.createElement('div');
+                        emailItem.className = `email-item ${email.seen ? '' : 'unread'}`;
+                        emailItem.innerHTML = `
+                            <div class="subject">
+                                <span>${escapeHtml(email.subject) || '(无主题)'}</span>
+                                <span class="badge">${formatFileSize(email.size)}</span>
+                            </div>
+                            <div class="meta">
+                                <span class="from" title="${escapeHtml(email.from)}">${escapeHtml(email.from)}</span>
+                                <span class="date">${formatDate(email.date)}</span>
+                            </div>
+                        `;
+                        
+                        emailItem.addEventListener('click', () => {
+                            // 跳转到详情页面
+                            window.location.href = `detail.html?email=${encodeURIComponent(currentEmail)}&id=${encodeURIComponent(email.id)}`;
+                        });
+                        
+                        emailList.appendChild(emailItem);
+                    });
+                    
+                    previousEmails = emails; // 更新上一次的邮件列表
+                    
+                    // 如果有新邮件，显示通知
+                    if (emails.length > 0 && previousEmails.length > 0 && 
+                        emails[0].id !== previousEmails[0]?.id) {
+                        showNewEmailNotification(emails[0]);
+                    }
+                }
+            } catch (error) {
+                console.error('加载邮件列表失败:', error);
+                document.getElementById('emailList').innerHTML = `
+                    <div class="error-state">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                        </svg>
+                        <p>加载失败: ${escapeHtml(error.message)}</p>
+                        <button onclick="loadEmails()" style="margin-top: 10px;">重试</button>
+                    </div>
+                `;
+            }
+        }
+
+        // 显示新邮件通知
+        function showNewEmailNotification(email) {
+            const notification = document.createElement('div');
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = 'white';
+            notification.style.padding = '15px';
+            notification.style.borderRadius = '8px';
+            notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            notification.style.zIndex = '1000';
+            notification.style.cursor = 'pointer';
+            notification.style.maxWidth = '300px';
+            notification.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 5px;">新邮件到达</div>
+                <div style="font-size: 14px;">来自: ${escapeHtml(email.from)}</div>
+                <div style="font-size: 14px;">主题: ${escapeHtml(email.subject) || '(无主题)'}</div>
+            `;
+            
+            notification.addEventListener('click', () => {
+                document.body.removeChild(notification);
+                // 滚动到邮件列表顶部
+                document.getElementById('emailList').scrollTo(0, 0);
+            });
+            
+            document.body.appendChild(notification);
+            
+            // 5秒后自动消失
+            setTimeout(() => {
+                if (document.body.contains(notification)) {
+                    document.body.removeChild(notification);
+                }
+            }, 5000);
+        }
+
+        // 格式化日期
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return dateString;
+
+            const now = new Date();
+            const diffInHours = (now - date) / (1000 * 60 * 60);
+
+            if (diffInHours < 24) {
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } else if (diffInHours < 48) {
+                return '昨天';
+            } else if (diffInHours < 168) {
+                return date.toLocaleDateString([], { weekday: 'short' });
+            } else {
+                return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+            }
+        }
+
+        // 格式化文件大小
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // HTML转义
+        function escapeHtml(unsafe) {
+            if (!unsafe) return '';
+            return unsafe.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
